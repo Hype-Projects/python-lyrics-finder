@@ -1,0 +1,24 @@
+[project]
+name = "aternos-console-spammer"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "seujorgenochurras", email = "eusoulegaldemaiseverdadeeujuro@gmail.com"},
+]
+dependencies = [
+    "playwright>=1.42.0",
+    "beautifulsoup4>=4.12.3",
+    "requests>=2.31.0",
+    "types-requests>=2.31.0.20240403",
+    "types-beautifulsoup4>=4.12.0.20240229",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+dev = "python src/aternos_console_spammer/__init__.py"
