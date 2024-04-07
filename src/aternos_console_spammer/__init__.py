@@ -1,4 +1,5 @@
 import asyncio
+from time import sleep
 from playwright.async_api import Page, async_playwright, Playwright
 from bs4 import BeautifulSoup
 from json import loads
@@ -10,7 +11,7 @@ def split_lyrics(lyrics: str):
     return lyrics.split("\n")
 
 
-async def run(playwright: Playwright):
+async def run(playwright: Playwright,song:list[str]):
 
     async def send_message(msg: str, page: Page):
         message_input = await page.query_selector("#c-input")
@@ -25,10 +26,9 @@ async def run(playwright: Playwright):
     )
     page = await browser.new_page()
     await page.goto("https://aternos.org/console/")
-    arr = ["sim"]
-    for _i in range(0, 10):
-        for j in range(0, len(arr) - 1):
-            await send_message(f"tell LucasHype {arr[j]}", page)
+    for letter in song:      
+        sleep(0.8)  
+        await send_message(f"tell LucasHype {letter}", page)
     await page.wait_for_timeout(1000000)
 
 
@@ -40,7 +40,7 @@ cse_token_generator_url = (
 
 
 async def generate_cse_token() -> str:
-    cse_token_content = str(requests.get(cse_token_generator_url).content)
+    cse_token_content = requests.get(cse_token_generator_url).text
     cse_token_regex = regex.compile('(?<="cse_token": )"[^"]*"')
     cse_token = str(cse_token_regex.findall(cse_token_content)[0])
     cse_token = cse_token.replace('"', "")
@@ -51,7 +51,7 @@ async def search_lyrics(query: str, result_index: int = 0) -> str:
 
     lyrics_url = await search_lyrics_url(query, result_index)
     lyrics_url = lyrics_url.replace("/traducao.html", "")
-    lyrics_html = requests.get(lyrics_url).content.decode()
+    lyrics_html = requests.get(lyrics_url).text
     lyrics_soup = BeautifulSoup(lyrics_html, "html.parser")
     lyrics_div = lyrics_soup.find(class_="lyric-original")
     lyrics = ""
@@ -69,7 +69,7 @@ async def search_lyrics_url(query: str, result_index: int = 0) -> str:
     cse_token = await generate_cse_token()
     query_url = f"{song_name_search_url}&q={query}&cse_tok={cse_token}"
 
-    raw_json = requests.get(query_url).content.decode()
+    raw_json = requests.get(query_url).text
     raw_json = raw_json.split("\n", 2)[2]  # removing google api header
     raw_json = raw_json[:-2]
     raw_json = "{" + raw_json
@@ -82,10 +82,10 @@ async def main():
 
 
 async def run_playwright():
-    lyrics = await search_lyrics("")
-    print(lyrics)
-    # async with async_playwright() as playwright:
-    #     await run(playwright)
+    lyrics = await search_lyrics("cheia de manias")
+    song = [letter for letter in lyrics.split('\n') if letter != '']
+    async with async_playwright() as playwright:
+        await run(playwright,song)
 
 
 asyncio.run(main())
