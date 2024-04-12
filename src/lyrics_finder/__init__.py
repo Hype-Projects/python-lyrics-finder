@@ -11,7 +11,7 @@ def split_lyrics(lyrics: str):
     return lyrics.split("\n")
 
 
-async def run(playwright: Playwright,song:list[str]):
+async def run(playwright: Playwright, song: list[str]):
 
     async def send_message(msg: str, page: Page):
         message_input = await page.query_selector("#c-input")
@@ -26,9 +26,9 @@ async def run(playwright: Playwright,song:list[str]):
     )
     page = await browser.new_page()
     await page.goto("https://aternos.org/console/")
-    for letter in song:      
-        sleep(0.8)  
-        await send_message(f"tell LucasHype {letter}", page)
+    for letter in song:
+        sleep(0.8)
+        await send_message(f"tell Marcs059 {letter}", page)
     await page.wait_for_timeout(1000000)
 
 
@@ -82,10 +82,10 @@ async def main():
 
 
 async def run_playwright():
-    lyrics = await search_lyrics("cheia de manias")
-    song = [letter for letter in lyrics.split('\n') if letter != '']
+    lyrics = await search_lyrics("a lua cheia clareia")
+    song = [letter for letter in lyrics.split("\n") if letter != ""]
     async with async_playwright() as playwright:
-        await run(playwright,song)
+        await run(playwright, song)
 
 
 asyncio.run(main())

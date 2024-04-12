@@ -21,4 +21,4 @@ license = {text = "MIT"}
 distribution = false
 
 [tool.pdm.scripts]
-dev = "python src/aternos_console_spammer/__init__.py"
+dev = "python src/lyrics_finder/__init__.py"
